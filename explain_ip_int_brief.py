@@ -50,9 +50,7 @@ if __name__ == "__main__":
         file_path = "/flash/guest-share/ip_int_brief_output.txt"  # Correct path in Guestshell
         with open(file_path, 'r') as file:
             raw_config = file.read()
-        
-        print(f"Received Config: {raw_config}")
-        
+              
         explanation = explain_config(raw_config)
         print(f"Explanation: {explanation}")
         
