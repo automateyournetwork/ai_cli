@@ -10,9 +10,7 @@ event manager applet show_ip_int_brief_trigger
  action 3.4 file close fh
  action 4.0 syslog msg "Executing Python script via Guest Shell"
  action 5.0 cli command "guestshell run python3 /home/guestshell/explain_ip_int_brief.py"
- action 6.0 cli command "sleep 300"
- action 7.0 syslog msg "Completed waiting for LLM response"
- action 8.0 cli command "guestshell run cat /flash/guest-share/ip_int_brief_output.txt"
- action 8.1 set A "$_cli_result"
- action 9.0 syslog msg "Python script output: $A"
- action 10.0 syslog msg "Python script execution completed"
+ action 6.0 cli command "sleep 180"
+ action 7.0 set A "$_cli_result"
+ action 8.0 syslog msg "Python script output: $A"
+ action 9.0 syslog msg "Python script execution completed"
