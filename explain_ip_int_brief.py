@@ -4,20 +4,22 @@ import json
 import time
 
 def explain_config(config):
-    url = "http://localhost:11434/api/generate"
+    #url = "http://localhost:11434/api/generate"
+    url = "http://64.101.169.100:11434/api/generate"
+    
     headers = {
         "Content-Type": "application/json"
     }
     # Replace newline characters with spaces
     sanitized_config = config.replace('\n', ' ').replace('\r', '')
     data = {
-        "model": "phi3",
+    #    "model": "phi3",
+        "model": "llama3",
         "prompt": f"Analyze Cisco IOS XE show ip interface brief command output: {sanitized_config}",
         "stream": False
     }
 
     try:
-        print(f"Sending request to {url} with data: {json.dumps(data)}")  # Debug: Print request data
         response = requests.post(url, headers=headers, data=json.dumps(data))
         
         # Wait for a maximum of 120 seconds for a response
@@ -27,13 +29,9 @@ def explain_config(config):
             time.sleep(5)
             wait_time += 5
             response = requests.post(url, headers=headers, data=json.dumps(data))
-        
-        print(f"Response status code: {response.status_code}")  # Debug: Print response status code
-        print(f"Response text: {response.text}")  # Debug: Print response text
-        
+              
         if response.status_code == 200:
             response_data = response.json()
-            print(f"Response received: {response_data}")  # Debug: Print the response data
             ai_response = response_data.get('response', '')
             return ai_response
         else:
