@@ -5,7 +5,7 @@ event manager applet show_ip_int_brief_trigger
  action 2.0 cli command "enable"
  action 3.0 cli command "show ip interface brief | exclude unassigned"
  action 3.1 set ip_int_brief_output "$_cli_result"
- action 3.2 file open fh flash:ip_int_brief_output.txt w
+ action 3.2 file open fh flash:/guest-share/ip_int_brief_output.txt w
  action 3.3 file write fh "$ip_int_brief_output"
  action 3.4 file close fh
  action 4.0 syslog msg "Executing Python script via Guest Shell"
