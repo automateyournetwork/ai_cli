@@ -1,0 +1,16 @@
+no event manager applet show_environment_all_trigger
+event manager applet show_environment_all_trigger
+ event cli pattern "show environment all" sync no skip yes maxrun 600
+ action 1.0 syslog msg "EEM script triggered for show environment"
+ action 2.0 cli command "enable"
+ action 3.0 cli command "show environment all"
+ action 3.1 set show_environment_all_output "$_cli_result"
+ action 3.2 file open fh flash:/guest-share/show_environment_all_output.txt w
+ action 3.3 file write fh "$show_environment_all_output"
+ action 3.4 file close fh
+ action 4.0 syslog msg "Executing Python script via Guest Shell"
+ action 5.0 cli command "guestshell run python3 /home/guestshell/environment_analysis.py"
+ action 6.0 cli command "sleep 180"
+ action 7.0 set A "$_cli_result"
+ action 8.0 syslog msg "Python script output: $A"
+ action 9.0 syslog msg "Python script execution completed"

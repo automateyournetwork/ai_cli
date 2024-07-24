@@ -4,7 +4,7 @@ import json
 import time
 
 def explain_config(config):
-    url = "http://localhost:11434/api/generate"
+    url = "http://64.101.169.100:11434/api/generate"
     headers = {
         "Content-Type": "application/json"
     }
@@ -12,21 +12,21 @@ def explain_config(config):
     sanitized_config = config.replace('\n', ' ').replace('\r', '')
     data = {
         "model": "llama3",
-        "prompt": f"You are a network security expert. Please analyze the following Cisco IOS XE running-configuration with a technical focus on security analysis, best practices, and security configuration. Please report back a list of security risks or vulnerabilitys as well as what is being done well in the configuration from a security perspective: {sanitized_config}",
+        "prompt": f"You are a Cisco networking expert. Please analyze the following Cisco IOS XE show environment all output with a technical focus on environmental details, issues, power consumption, and any other insight you can provide. Please create a report: {sanitized_config}",
         "stream": False
     }
 
     try:
         print(f"Sending request to {url} with data: {json.dumps(data)}")  # Debug: Print request data
-        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response = requests.post(url, headers=headers, data=json.dumps(data).encode('utf-8'))  # Ensure data is encoded in UTF-8
         
         # Wait for a maximum of 120 seconds for a response
         wait_time = 0
-        while wait_time < 0 and response.status_code != 200:
+        while wait_time < 120 and response.status_code != 200:
             print("Waiting for response...")
             time.sleep(5)
             wait_time += 5
-            response = requests.post(url, headers=headers, data=json.dumps(data))
+            response = requests.post(url, headers=headers, data=json.dumps(data).encode('utf-8'))
         
         print(f"Response status code: {response.status_code}")  # Debug: Print response status code
         print(f"Response text: {response.text}")  # Debug: Print response text
@@ -47,8 +47,8 @@ def explain_config(config):
 
 if __name__ == "__main__":
     try:
-        file_path = "/flash/guest-share/show_run_output.txt"  # Correct path in Guestshell
-        with open(file_path, 'r') as file:
+        file_path = "/flash/guest-share/show_environment_all_output.txt"  # Correct path in Guestshell
+        with open(file_path, 'r', encoding='utf-8') as file:
             raw_config = file.read()
               
         explanation = explain_config(raw_config)
